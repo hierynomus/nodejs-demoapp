@@ -74,7 +74,7 @@ jobs:
 
       - id: get_version
         name: Get version
-        uses: jannemattila/get-version-from-tag@v4
+        run: echo "version=${${GITHUB_REF#refs/*/}#v}" >> $GITHUB_OUTPUT
       - name: 'Package Helm chart'
         run: |
           helm package charts/demoapp --version ${{ steps.get_version.outputs.version }}
