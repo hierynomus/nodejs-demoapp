@@ -72,5 +72,5 @@ jobs:
       # Only when pushing to default branch (e.g. master or main), then push image to registry
       - name: 'Push to container registry'
         run: |
-          echo ${{ secrets.REGISTRY_PASSWORD }} | docker login $IMAGE_REG -u $REGISTRY_USER --password-stdin
+          echo ${{ secrets.REGISTRY_PASSWORD }} | docker login $IMAGE_REG -u ${{ secrets.REGISTRY_USER }} --password-stdin
           docker push ${IMAGE_REG}/${IMAGE_REPO}:${IMAGE_TAG}
