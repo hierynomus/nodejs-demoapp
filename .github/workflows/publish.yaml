@@ -1,33 +1,27 @@
-name: CI Build App
+name: Release Versioned Image
 
 on:
   push:
-    branches: [main]
-    paths:
-      - 'src/**'
-      - '.github/workflows/**'
-      - 'docker/**'
-  pull_request:
+    tags:
+      - 'v*.*.*'
 
 env:
   IMAGE_REG: registry.rigel.lab.geeko.me
   IMAGE_REPO: suse/demoapp
+  HELM_REG: suse
 
 permissions:
   packages: write
-  statuses: write
-  checks: write
 
 jobs:
   build:
     name: 'Build & push image'
     # needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: 'Install node'
         run: |
-          apk update && apk add --no-cache git docker docker-compose nodejs gpg openssh npm ansible
+          apk update && apk add --no-cache git docker docker-compose nodejs gpg openssh npm ansible helm
       - name: 'Checkout'
         uses: actions/checkout@v4
 
@@ -68,3 +62,21 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+  helm-chart:
+    name: 'Build & push Helm chart'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Install node'
+        run: |
+          apk update && apk add --no-cache git docker docker-compose nodejs gpg openssh npm ansible helm
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+
+      - id: get_version
+        name: Get version
+        uses: jannemattila/get-version-from-tag@v4
+      - name: 'Package Helm chart'
+        run: |
+          helm package charts/demoapp --version ${{ steps.get_version.outputs.version }}
+          helm registry login ${{ env.IMAGE_REG }} --username ${{ secrets.REGISTRY_USER }} --password ${{ secrets.REGISTRY_PASSWORD }}
+          helm push demoapp-${{ steps.get_version.outputs.version }}.tgz oci://${{ env.HELM_REG }}

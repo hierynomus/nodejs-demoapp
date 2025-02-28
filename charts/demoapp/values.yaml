@@ -1,0 +1,6 @@
+image:
+  repository: suse/demoapp
+  registry: registry.rigel.lab.geeko.me
+  tag: v0.1.0
+
+replicaCount: 1

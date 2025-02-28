@@ -1,0 +1,8 @@
+apiVersion: v2
+name: demoapp
+description: A Helm chart for Kubernetes
+type: application
+keywords:
+  - demo
+  - nodejs
+  - application
