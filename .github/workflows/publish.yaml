@@ -79,4 +79,4 @@ jobs:
         run: |
           helm package charts/demoapp --version ${{ steps.get_version.outputs.version }} --app-version ${{ steps.get_version.outputs.version }}
           helm registry login ${{ env.IMAGE_REG }} --username ${{ secrets.REGISTRY_USER }} --password ${{ secrets.REGISTRY_PASSWORD }}
-          helm push demoapp-${{ steps.get_version.outputs.version }}.tgz oci://${{ env.HELM_REG }}
+          helm push demoapp-${{ steps.get_version.outputs.version }}.tgz oci://${{ env.IMAGE_REG }}/${{ env.HELM_REG }}
