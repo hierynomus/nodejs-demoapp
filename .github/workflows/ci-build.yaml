@@ -53,9 +53,12 @@ jobs:
   build:
     name: 'Build & push image'
     # needs: test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
+      - name: 'Install node'
+        script: |
+          sudo apt-get install -y nodejs
       - name: 'Checkout'
         uses: actions/checkout@v4
 
