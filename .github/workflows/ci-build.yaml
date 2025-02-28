@@ -57,8 +57,8 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: 'Install node'
-        script: |
-          sudo apt-get install -y nodejs
+        run: |
+          apk update && apk add --no-cache git docker docker-compose nodejs gpg openssh npm ansible
       - name: 'Checkout'
         uses: actions/checkout@v4
 
