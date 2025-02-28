@@ -1,6 +1,6 @@
 FROM registry.rigel.lab.geeko.me/application-collection/containers/nodejs:20-dev
 
-RUN zypper --non-interactive install -y git openssh make awk
+RUN zypper --non-interactive install -y git openssh make awk curl
 RUN useradd -ms /bin/bash node
 
 ARG USERNAME=node
