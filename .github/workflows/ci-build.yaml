@@ -78,8 +78,8 @@ jobs:
       - name: 'Make kubeconfig from kubeconfig.yaml'
         run: |
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}"
           echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
+          cat ~/.kube/config
       - name: 'Helm install'
         run: |
           helm upgrade --install -n demoapp --create-namespace demoapp ./charts/demoapp --set image.tag=${{ github.ref_name }}
