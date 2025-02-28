@@ -75,6 +75,8 @@ jobs:
       - name: 'Install node + helm'
         run: |
           apk update && apk add --no-cache git docker docker-compose nodejs gpg openssh npm ansible helm jq
+      - name: 'Checkout'
+        uses: actions/checkout@v4
       - name: 'Make kubeconfig from kubeconfig.yaml'
         run: |
           mkdir -p ~/.kube
