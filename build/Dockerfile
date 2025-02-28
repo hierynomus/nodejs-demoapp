@@ -1,5 +1,5 @@
 
-FROM registry.rigel.lab.geeko.me/application-collection/nodejs:20-dev
+FROM registry.rigel.lab.geeko.me/application-collection/containers/nodejs:20-dev
 LABEL Name="Node.js Demo App" Version=4.9.9
 LABEL org.opencontainers.image.source = "https://github.com/benc-uk/nodejs-demoapp"
 ENV NODE_ENV production
