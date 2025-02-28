@@ -2,15 +2,15 @@ name: CI Build App
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths:
       - 'src/**'
       - '.github/workflows/**'
   pull_request:
 
 env:
-  IMAGE_REG: ghcr.io
-  IMAGE_REPO: benc-uk/nodejs-demoapp
+  IMAGE_REG: registry.rigel.lab.geeko.me
+  IMAGE_REPO: suse/demoapp
 
 permissions:
   packages: write
@@ -54,7 +54,7 @@ jobs:
     name: 'Build & push image'
     needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v4
@@ -69,13 +69,5 @@ jobs:
       # Only when pushing to default branch (e.g. master or main), then push image to registry
       - name: 'Push to container registry'
         run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login $IMAGE_REG -u $GITHUB_ACTOR --password-stdin
+          echo ${{ secrets.REGISTRY_PASSWORD }} | docker login $IMAGE_REG -u $REGISTRY_USER --password-stdin
           make push
-
-      - name: 'Trigger AKS release pipeline'
-        if: github.ref == 'refs/heads/master'
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: 'CD Release - AKS'
-          token: ${{ secrets.GH_PAT }}
-          inputs: '{ "IMAGE_TAG": "${{ env.IMAGE_TAG }}" }'
