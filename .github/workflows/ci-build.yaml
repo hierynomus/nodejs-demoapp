@@ -67,10 +67,10 @@ jobs:
         run: echo "IMAGE_TAG=$(date +%d-%m-%Y.%H%M)" >> $GITHUB_ENV
 
       - name: 'Docker build image'
-        run: make image
+        run: docker build . --file build/Dockerfile --tag ${IMAGE_REG}/${IMAGE_REPO}:${IMAGE_TAG}
 
       # Only when pushing to default branch (e.g. master or main), then push image to registry
       - name: 'Push to container registry'
         run: |
           echo ${{ secrets.REGISTRY_PASSWORD }} | docker login $IMAGE_REG -u $REGISTRY_USER --password-stdin
-          make push
+          docker push ${IMAGE_REG}/${IMAGE_REPO}:${IMAGE_TAG}
